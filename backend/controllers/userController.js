@@ -3,6 +3,8 @@ import { generateAccessToken, getUserData } from '../services/handleGitCode.js';
 import { User } from '../database/userSchema.js';
 import { generateToken } from '../services/generateJwt.js';
 import { createOrRefreshToken } from '../services/createOrRefreshToken.js';
+import { Project } from '../database/projectSchema.js';
+import { Todo } from '../database/todoSchema.js';
 
 export const userController = () => {
 
@@ -31,7 +33,7 @@ export const userController = () => {
     }
 
     const handleCallback = async(req, res, next) => {
-        
+
         try {
 
           const { code } = req.query;
@@ -59,13 +61,60 @@ export const userController = () => {
 
     }
 
-    const successPage = (req, res) => {
-        res.send('successs')
+    const createProject = async(req, res, next) => {
+        try {
+
+            const { projectName } = req.body;
+
+            const project = new Project({
+                title: projectName
+            })
+            await project.save()
+
+            res.status(200).json({success:true, message:'new project created.'})
+            
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
     }
+
+    const createTodo = async(req, res, next) => {
+        try {
+
+            const { desc, projectId } = req.body;
+
+            const todo = new Todo({
+                description: desc,
+                projectId: projectId
+            })
+
+            await todo.save()
+
+            res.status(200).json({success:true, message:'new todo created.'})
+
+            
+        } catch (error) {
+            console.log(error)
+            next(error)
+            
+        }
+    }
+
+    const updateTodo = async(req, res, next) => {
+        try {
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     return{
         signIn,
         handleCallback,
-        successPage
+        createProject,
+        createTodo
+    
     }
 }
