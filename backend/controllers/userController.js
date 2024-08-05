@@ -5,6 +5,7 @@ import { Project } from '../database/projectSchema.js';
 import { Todo } from '../database/todoSchema.js';
 import { createMarkDown } from '../services/createMarkdownFile.js';
 import { saveToLocal } from '../services/saveToLocal.js';
+import { publishGist } from '../services/publishGist.js';
 
 export const userController = () => {
 
@@ -15,7 +16,7 @@ export const userController = () => {
             const params = queryString.stringify({
                 client_id: process.env.GITHUB_CLIENT_ID,
                 redirect_uri: 'http://localhost:4000/api/callback',
-                scope: ['read:user', 'user:email'].join(' '),
+                scope: ['read:user', 'user:email', 'gist'].join(' '),
                 allow_signup: true,
             });
 
@@ -152,24 +153,25 @@ export const userController = () => {
     const createAndPublishGist = async(req, res, next) => {
         try {
 
-            const userName = 'test_user'
-            const projectName = 'test_project'
+            // const { userName, projectName, todos} = req.body;
 
+            const projectName = 'test gistproject'
+            const userName = 'Arjun VR'
             const todos = [
                 { description: 'task one', status: false },
                 { description: 'task two', status: true },
-                { description: 'task three', status: true },
-                { description: 'task four', status: true  },
+                { description: 'task three', status: false },
+                { description: 'task four', status: false },
                 { description: 'task five', status: true }
-              ]
+              ];
 
             const mdFile =  createMarkDown(projectName, todos)
 
-            const result = await saveToLocal(userName, mdFile, projectName)
+            await saveToLocal(userName, mdFile, projectName)
 
-            console.log('result:',result)
+            const gitHtmlUrl = await publishGist(projectName, userName, mdFile)
 
-            res.status(200).json({success:true, message:'success'})
+            res.status(200).json({success:true, message:'success', gitHtmlUrl})
             
         } catch (error) {
             console.log(error)
