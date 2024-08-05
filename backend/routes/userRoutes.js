@@ -10,7 +10,8 @@ routes.get('/signin', controller.signIn)
 routes.get('/callback', controller.handleCallback)
 routes.post('/newproject',authenticationHandler, controller.createProject)
 routes.post('/newtodo', authenticationHandler, controller.createTodo)
-routes.get('/jwt', authenticationHandler)
+routes.post('/publish', controller.createAndPublishGist)
+
 
 
 
