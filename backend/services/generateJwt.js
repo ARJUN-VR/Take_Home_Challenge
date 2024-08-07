@@ -8,7 +8,7 @@ export const generateToken = async(res, user_id) => {
             expiresIn:'10d'
         })
 
-        console.log('accessToken', access_token)
+        console.log('accessTokennew', access_token)
 
         res.cookie('accessToken',access_token,{
             httponly: true,
@@ -21,6 +21,7 @@ export const generateToken = async(res, user_id) => {
         
     } catch (error) {
         console.log(error)
+        throw error
         
     }
 }

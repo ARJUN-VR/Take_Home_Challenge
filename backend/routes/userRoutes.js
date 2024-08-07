@@ -7,10 +7,18 @@ const controller = userController()
 
 
 routes.get('/signin', controller.signIn)
-routes.get('/callback', controller.handleCallback)
+routes.post('/callback', controller.handleCallback)
 routes.post('/newproject',authenticationHandler, controller.createProject)
 routes.post('/newtodo', authenticationHandler, controller.createTodo)
 routes.post('/publish', controller.createAndPublishGist)
+routes.get('/projects', authenticationHandler, controller.fetchProjectsByUserName)
+routes.get('/todos', authenticationHandler, controller.fetchTodosByProjectId)
+routes.post('/removetodo', authenticationHandler, controller.removeTodo)
+routes.patch('/edittodo', authenticationHandler, controller.updateTodoDesc)
+routes.patch('/changestatus', authenticationHandler, controller.updateTodoStatus)
+routes.patch('/rename', authenticationHandler, controller.updateProject)
+
+
 
 
 

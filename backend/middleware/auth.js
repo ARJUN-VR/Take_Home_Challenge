@@ -6,6 +6,8 @@ export const authenticationHandler = async(req, res, next) => {
 
         const token = req.cookies.accessToken
 
+        
+
         if(!token) return res.status(400).json({success:false, message:'no token found'})
 
        const decodedData  = jwt.verify(token, process.env.ACCESS_KEY)

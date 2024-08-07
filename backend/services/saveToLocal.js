@@ -13,7 +13,7 @@ export const saveToLocal = async(userName, mdFile, projectName) => {
 
         fs.writeFileSync(filePath, mdFile);
 
-        return 'successfull saved markdown'
+        return 'successfully saved markdown'
 
 
         

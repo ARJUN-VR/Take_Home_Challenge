@@ -28,8 +28,9 @@ export const generateAccessToken = async(code) => {
         return data.access_token
 
 
-    }catch(err){
-        console.log('ffrom generate accestoken', err)
+    }catch(error){
+        console.log('from generate accestoken', err)
+        throw error
     }
 }
 
@@ -50,5 +51,6 @@ export const getUserData = async(access_token) => {
         
     } catch (error) {
         console.log(error)
+        throw error
     }
 }

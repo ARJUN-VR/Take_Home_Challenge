@@ -13,16 +13,18 @@ export const userController = () => {
     const signIn = async (req, res, next) => {
         try {
 
+
+            console.log('request entering to the controller')
             const params = queryString.stringify({
                 client_id: process.env.GITHUB_CLIENT_ID,
-                redirect_uri: 'http://localhost:4000/api/callback',
+                redirect_uri: 'http://localhost:5173',
                 scope: ['read:user', 'user:email', 'gist'].join(' '),
                 allow_signup: true,
             });
 
             const githubLoginUrl = `https://github.com/login/oauth/authorize?${params}`;
 
-            res.redirect(githubLoginUrl)
+            res.status(200).json({success:true, githubLoginUrl})
 
         } catch (error) {
             console.log(error)
@@ -36,23 +38,24 @@ export const userController = () => {
     const handleCallback = async (req, res, next) => {
 
         try {
-
-            const { code } = req.query;
+            const { code } = req.body;
 
             if (!code) return res.status(400).json({ success: false, message: 'Authorization code is missing' });
 
 
             const access_token = await generateAccessToken(code)
 
+            if(!access_token) return res.status(400).json({ success: false, message: 'no access token found' })     
+
             const userdata = await getUserData(access_token)
 
-            const userName = userdata.name || userdata.login
+            const userName = userdata.login
 
             if (!userName) return res.status(400).json({ success: false, message: 'no username found' })
 
             const { message } = await createOrRefreshToken(res, userName, access_token)
 
-            res.status(200).json({ success: true, message })
+            res.status(200).json({ success: true, message, userName })
 
         } catch (error) {
             console.log(error)
@@ -65,10 +68,11 @@ export const userController = () => {
     const createProject = async (req, res, next) => {
         try {
 
-            const { projectName } = req.body;
+            const { projectName, userName } = req.body;
 
             const project = new Project({
-                title: projectName
+                title: projectName,
+                userName: userName
             })
             await project.save()
 
@@ -102,6 +106,17 @@ export const userController = () => {
         }
     }
 
+    const removeTodo = async(req, res, next) => {
+        try {
+            const { todoId } = req.body;
+            await Todo.findOneAndDelete({_id:todoId})
+            res.status(200).json({success:true, message:'deleted successfully'})
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
+    }
+
     const updateTodoStatus = async (req, res, next) => {
         try {
           const { id } = req.body;
@@ -121,8 +136,10 @@ export const userController = () => {
     const updateTodoDesc = async (req, res, next) => {
         try {
 
-            const { desc, id } = req.body;
-            await Project.findOneAndUpdate({_id:id},{title:desc})
+            const { desc, todoId } = req.body;
+            console.log(desc, todoId)
+            await Todo.findOneAndUpdate({_id:todoId},{
+                description:desc})
 
             res.status(200).json({success:true, message:'updated successfully'})
 
@@ -153,19 +170,9 @@ export const userController = () => {
     const createAndPublishGist = async(req, res, next) => {
         try {
 
-            // const { userName, projectName, todos} = req.body;
+            const { userName, projectName, todos} = req.body;
 
-            const projectName = 'test gistproject'
-            const userName = 'Arjun VR'
-            const todos = [
-                { description: 'task one', status: false },
-                { description: 'task two', status: true },
-                { description: 'task three', status: false },
-                { description: 'task four', status: false },
-                { description: 'task five', status: true }
-              ];
-
-            const mdFile =  createMarkDown(projectName, todos)
+            const mdFile = createMarkDown(projectName, todos)
 
             await saveToLocal(userName, mdFile, projectName)
 
@@ -173,6 +180,37 @@ export const userController = () => {
 
             res.status(200).json({success:true, message:'success', gitHtmlUrl})
             
+        } catch (error) {
+            console.log(error)
+            next(error)
+            
+        }
+    }
+
+
+    const fetchProjectsByUserName = async(req, res, next) => {
+        try {
+
+            const { userName } = req.query;
+            console.log('userName', userName, req.query)
+            const projects = await Project.find({userName})
+
+            console.log(projects)
+
+            res.status(200).json({success:true, projects})
+            
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
+    }
+
+    const fetchTodosByProjectId = async(req, res, next) => {
+        try {
+            const { projectId } = req.query;
+            const todos = await Todo.find({projectId})
+            console.log('initail test', todos)
+            res.status(200).json({success:true, todos})
         } catch (error) {
             console.log(error)
             next(error)
@@ -191,6 +229,9 @@ export const userController = () => {
         updateTodoStatus,
         updateTodoDesc,
         updateProject,
-        createAndPublishGist
+        createAndPublishGist,
+        fetchProjectsByUserName,
+        fetchTodosByProjectId,
+        removeTodo
     }
 }

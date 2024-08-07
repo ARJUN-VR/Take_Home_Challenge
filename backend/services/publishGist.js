@@ -14,7 +14,7 @@ export const publishGist = async(projectName, userName, mdFile) => {
             description: 'test gist',
             public: false,
             files: {
-                'readmetest.md': {
+                [`${projectName}.md`]: {
                     content: `${mdFile}`
                 }
             },
