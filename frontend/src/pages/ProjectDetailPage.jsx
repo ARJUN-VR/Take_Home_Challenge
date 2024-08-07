@@ -25,9 +25,9 @@ export const ProjectDetailPage = () => {
 
     const userName = localStorage.getItem('userName')
 
-    console.log(projectId)
 
 
+    // creating todos
 
     const handleAddTodo = async () => {
         if (newTodo.trim()) {
@@ -84,8 +84,6 @@ export const ProjectDetailPage = () => {
 
             const data = await response.json()
 
-            console.log('todos', data)
-
             setTodos(data.todos)
 
         } catch (error) {
@@ -141,12 +139,12 @@ export const ProjectDetailPage = () => {
                 }),
             })
 
-            const data = await response.json()
+             await response.json()
 
             toast.success('Project Title Updated')
 
           
-            console.log('data', data)
+
 
 
 
@@ -187,7 +185,7 @@ export const ProjectDetailPage = () => {
         try {
 
             if(todos.length == 0) {
-                toast.warn('Please add some todos')
+                toast.warn('Please add  todos')
                 return
             }
 
@@ -206,7 +204,6 @@ export const ProjectDetailPage = () => {
 
             const data = await response.json()
 
-            console.log('data', data)
 
             setGistUrl(data.gitHtmlUrl)
 
@@ -233,7 +230,7 @@ export const ProjectDetailPage = () => {
 
             const data = await response.json()
             fetchTodos()
-            console.log('data', data)
+  
             
         } catch (error) {
             console.log(error)

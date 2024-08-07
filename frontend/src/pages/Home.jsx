@@ -1,21 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect} from 'react'
 
 import { ProjectList } from '../components/ProjectList'
 
 const Home = ({projects}) => {
  
-
-
-    const userName = localStorage.getItem('userName')
-
-    console.log('userName', userName)
-
-
     const query = new URLSearchParams(window.location.search)
 
     const code = query.get('code')
 
-    console.log('code', code)
 
     const fetchData = async (code) => {
         try {
@@ -30,7 +22,7 @@ const Home = ({projects}) => {
       
         const data = await response.json()
 
-        console.log('data', data)
+   
 
         if(data.userName) localStorage.setItem('userName', data.userName)
 
@@ -64,7 +56,7 @@ const Home = ({projects}) => {
 
           <ProjectList projectList={projects}/>
 
-          {/* show project detailed view */}
+  
 
 
 

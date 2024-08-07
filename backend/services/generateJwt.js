@@ -8,8 +8,6 @@ export const generateToken = async(res, user_id) => {
             expiresIn:'10d'
         })
 
-        console.log('accessTokennew', access_token)
-
         res.cookie('accessToken',access_token,{
             httponly: true,
             secure: false,

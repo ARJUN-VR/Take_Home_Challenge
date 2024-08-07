@@ -25,11 +25,6 @@ export const CreateProject = ({ projectHandler }) => {
             }else{
               toast.error(data.message)
             }
-
-
-           
-
-            console.log('data', data)
             
         } catch (error) {
             console.log(error)

@@ -9,11 +9,7 @@ export const SigninGitHub = () => {
 
            const { githubLoginUrl } = await response.json()
 
-           console.log('url', githubLoginUrl)
-
            if(githubLoginUrl) window.location.href = githubLoginUrl
-
-
             
         } catch (error) {
             console.log(error)

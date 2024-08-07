@@ -1,6 +1,6 @@
 import queryString from 'querystring'
 
-
+// exchange the code for accessToken from github api
 export const generateAccessToken = async(code) => {
     try{
 
@@ -11,10 +11,10 @@ export const generateAccessToken = async(code) => {
             code,
         });
 
-        // Construct the URL with query parameters
+        // Constructing the URL with query parameters
         const url = `https://github.com/login/oauth/access_token?${query}`;
 
-        // Make the request to GitHub to exchange the code for an access token
+        //  request to GitHub to exchange the code for an access token
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -34,10 +34,11 @@ export const generateAccessToken = async(code) => {
     }
 }
 
+
+// fetch userdata from github using access token
 export const getUserData = async(access_token) => {
     try {
 
-        console.log('accestoken', access_token)
 
         const userData = await fetch('https://api.github.com/user', {
             method: 'GET',

@@ -1,6 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 
+
+// saves gist file based on the userName
 export const saveToLocal = async(userName, mdFile, projectName) => {
     try {
         const gistDir = path.resolve('gists')
