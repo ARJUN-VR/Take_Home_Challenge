@@ -26,11 +26,6 @@ app.use(express.json())
 app.use('/api', routes)
 app.use(errorHandler)
 
-// app.use(express.static(path.join( parentDir , '/frontend/dist')));
-
-// app.get('*', (req, res) =>
-//         res.sendFile(path.resolve( parentDir , 'frontend', 'dist', 'index.html'))
-//       );
 app.use('*', (req, res) => {
     res.status(400).json({message:'invalid endpoint'})
 })
@@ -44,6 +39,3 @@ app.listen(port, ()=>{
     console.log(`http://localhost:${port}`)
 })
 
-///create gist
-///create frontend
-/// prepare for the interview

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 export const ProjectDetailPage = () => {
@@ -250,7 +250,9 @@ export const ProjectDetailPage = () => {
                     value={titleEdit} onChange={(e) => setTitleEdit(e.target.value)} />
                 {
                     isTitleEdit ? (
-                        <button className='absolute right-4 bg-green-500 text-white font-semibold px-4 py-2 rounded-md shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300' onClick={editProjectTitle}>Save</button>
+                        <button className='absolute right-4 bg-green-500 text-white font-semibold px-4  rounded-md shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300' onClick={editProjectTitle}>
+                            <FontAwesomeIcon icon={faCheck} />
+                        </button>
                     ) : (
                         <button className='absolute right-4' onClick={() => setIsTitleEdit(true)}>
                             <FontAwesomeIcon icon={faEdit} />
