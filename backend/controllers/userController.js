@@ -9,12 +9,11 @@ import { publishGist } from '../services/publishGist.js';
 
 export const userController = () => {
 
-
+    //desc:sign in with github
+    //route:GET /api/signin
+    //access:public
     const signIn = async (req, res, next) => {
         try {
-
-
-            console.log('request entering to the controller')
             const params = queryString.stringify({
                 client_id: process.env.GITHUB_CLIENT_ID,
                 redirect_uri: 'http://localhost:5173',
@@ -31,17 +30,18 @@ export const userController = () => {
             next(error)
         }
 
-
-
     }
 
+
+    // desc:github callbackHandler
+    // route:POST /api/callback
+    // access:public
     const handleCallback = async (req, res, next) => {
 
         try {
             const { code } = req.body;
 
             if (!code) return res.status(400).json({ success: false, message: 'Authorization code is missing' });
-
 
             const access_token = await generateAccessToken(code)
 
@@ -61,10 +61,11 @@ export const userController = () => {
             console.log(error)
             next(error)
         }
-
-
     }
 
+    // desc:create project
+    // route:POST /api/newproject
+    // access:private
     const createProject = async (req, res, next) => {
         try {
 
@@ -84,6 +85,10 @@ export const userController = () => {
         }
     }
 
+
+    // desc:create todo
+    // route:POST /api/newtodo
+    // access:private
     const createTodo = async (req, res, next) => {
         try {
 
@@ -102,10 +107,13 @@ export const userController = () => {
         } catch (error) {
             console.log(error)
             next(error)
-
         }
     }
 
+
+    // desc:remove todo
+    // route:POST /api/removetodo
+    // access:private
     const removeTodo = async(req, res, next) => {
         try {
             const { todoId } = req.body;
@@ -117,6 +125,9 @@ export const userController = () => {
         }
     }
 
+    // desc:update todo
+    // route:PATCH /api/updatetodo
+    // access:private
     const updateTodoStatus = async (req, res, next) => {
         try {
           const { id } = req.body;
@@ -133,6 +144,10 @@ export const userController = () => {
         }
     }
 
+
+    // desc:update todo description
+    // route:PATCH /api/updatetodo
+    // access:private
     const updateTodoDesc = async (req, res, next) => {
         try {
 
@@ -151,6 +166,9 @@ export const userController = () => {
 
 
 
+    // desc:rename project title
+    // route:PATCH /api/renameproject
+    // access:private
     const updateProject = async (req, res, next) => {
         try {
             const { projectName, projectId } = req.body;
@@ -163,10 +181,13 @@ export const userController = () => {
 
             console.log(error)
             next(error)
-
         }
     }
 
+
+    // desc:create and publish gist
+    // route:POST /api/publish
+    // access:private
     const createAndPublishGist = async(req, res, next) => {
         try {
 
@@ -188,15 +209,14 @@ export const userController = () => {
     }
 
 
+    // desc:fetch projects by userName(unique)
+    // route:GET /api/projects
+    // access:private
     const fetchProjectsByUserName = async(req, res, next) => {
         try {
 
             const { userName } = req.query;
-            console.log('userName', userName, req.query)
             const projects = await Project.find({userName})
-
-            console.log(projects)
-
             res.status(200).json({success:true, projects})
             
         } catch (error) {
@@ -205,11 +225,13 @@ export const userController = () => {
         }
     }
 
+    // desc:fetch todos by projectId
+    // route:GET /api/todos
+    // access:private
     const fetchTodosByProjectId = async(req, res, next) => {
         try {
             const { projectId } = req.query;
             const todos = await Todo.find({projectId})
-            console.log('initail test', todos)
             res.status(200).json({success:true, todos})
         } catch (error) {
             console.log(error)
